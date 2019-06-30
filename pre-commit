@@ -1,0 +1,49 @@
+#!/bin/sh
+#
+
+.git/hooks/pre-commit.d/convert_line_endings_to_unix.sh
+
+if [ $? -ne 0 ]
+then
+	# There was a problem and the script returned a non zero value
+	echo 'There was a problem converting the line endings in file '$line
+	exit 1
+fi
+
+.git/hooks/pre-commit.d/check_white_space.sh
+
+if [ $? -ne 0 ]
+then
+	# There was a problem and the script returned a non zero value
+	echo 'There was a problem with the white space in file '$line
+	exit 1
+fi
+
+.git/hooks/pre-commit.d/check_variable_names.sh
+
+if [ $? -ne 0 ]
+then
+	# There was a problem and the script returned a non zero value
+	echo 'There was a problem correcting the bad variable case names in file '$line
+	exit 1
+fi
+
+.git/hooks/pre-commit.d/format_code.sh
+
+if [ $? -ne 0 ]
+then
+	# There was a problem and the script returned a non zero value
+	echo 'There was a problem formatting the code in '$line
+	exit 1
+fi
+
+.git/hooks/pre-commit.d/syntax.sh
+
+if [ $? -ne 0 ]
+then
+	# There was a problem and the script returned a non zero value
+	echo 'There was a problem with the syntax in '$line
+	exit 1
+fi
+
+exit 0
