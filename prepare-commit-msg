@@ -1,0 +1,45 @@
+#!/usr/bin/php
+<?php
+
+/* Copyright (C) 2017 Juergen Mueller - All Rights Reserved
+ * You may use, distribute and modify this code under the
+ * terms of the GPL v2 license.
+ *
+ * For a copy of the GPL v2 license please write to:
+ * juergenmueller77@yahoo.com
+ */
+
+/* Get the name of the temporary file that Git will use
+ * to contain the commit message
+ */
+$FileName = $argv[1];
+
+/* Start the message with a summary of the commit
+ */
+file_put_contents($FileName , '# Write one line with a summary of the commit' . "\n");
+file_put_contents($FileName , "\n", FILE_APPEND);
+file_put_contents($FileName , "\n", FILE_APPEND);
+
+/* Automatically list the files that are included in the script
+ */
+file_put_contents($FileName , '# Files changed in commit:' . "\n", FILE_APPEND);
+exec('git diff --cached --name-only', $FilesChanged);
+
+foreach ($FilesChanged as $Files) {
+	file_put_contents($FileName , '# ' . $Files . "\n", FILE_APPEND);
+}
+
+/* and add the branch at the bottom of the list
+ */
+exec('git symbolic-ref HEAD 2>/dev/null | cut -d"/" -f 3', $Branch);
+file_put_contents($FileName , '# On branch ' . $Branch[0] . "\n", FILE_APPEND);
+
+file_put_contents($FileName , "\n", FILE_APPEND);
+
+file_put_contents($FileName , '# List the changes that have been made, one change per line' . "\n", FILE_APPEND);
+
+file_put_contents($FileName , "\n", FILE_APPEND);
+
+file_put_contents($FileName , '# Any links to external sites referring to this commit, such as forum posts, github issues, bug reports etc.' . "\n", FILE_APPEND);
+
+?>
